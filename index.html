@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>简易房屋面积计算</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="panelBackdrop" class="panel-backdrop"></div>
+  <div class="app">
+    <aside id="sidePanel" class="panel">
+      <div class="panel-head">
+        <h1>房屋面积计算器</h1>
+        <button id="closePanelBtn" class="close-panel-btn" type="button" aria-label="关闭面板">×</button>
+      </div>
+      <p class="hint">支持多个多边形和开放草图。接近起点可自动闭合；未闭合草图可先暂存，后续点端点继续绘制。</p>
+
+      <section class="group">
+        <h2>绘图设置</h2>
+        <label class="toggle">
+          <input id="orthMode" type="checkbox" checked>
+          <span>正交模式（仅水平/垂直拉线）</span>
+        </label>
+        <label class="toggle">
+          <input id="alignToFinished" type="checkbox">
+          <span>对齐已完成多边形（默认关闭）</span>
+        </label>
+        <label class="field">
+          <span>自动闭合阈值（px）</span>
+          <input id="closeThreshold" type="number" min="4" step="1" value="16">
+        </label>
+        <label class="field">
+          <span>比例（px / 米）</span>
+          <input id="scale" type="number" min="5" step="1" value="40">
+        </label>
+      </section>
+
+      <section class="group">
+        <h2>墙体与面积</h2>
+        <label class="field">
+          <span>墙厚（米）</span>
+          <input id="wallThickness" type="number" min="0" step="0.01" value="0.24">
+        </label>
+        <label class="toggle">
+          <input id="innerOnly" type="checkbox" checked>
+          <span>只计算内面积（扣除墙厚）</span>
+        </label>
+      </section>
+
+      <section class="group actions">
+        <button id="undoBtn" type="button">撤销一步</button>
+        <button id="closeBtn" type="button">完成 / 暂存草图</button>
+        <button id="resetBtn" type="button" class="danger">清空</button>
+      </section>
+
+      <section class="group result">
+        <h2>画布统计</h2>
+        <p>多边形数量：<strong id="polyCount">0</strong></p>
+        <p class="final">总面积（当前模式）：<strong id="totalArea">0.00</strong> ㎡</p>
+        <p id="statusText" class="status">点击画布开始绘制。</p>
+      </section>
+
+      <section id="selectedSegmentBox" class="group hidden">
+        <h2 id="selectedSegmentTitle">选中边</h2>
+        <label class="field inline">
+          <span>长度（米）</span>
+          <input id="selectedSegmentLength" type="number" min="0.01" step="0.01">
+          <button id="applySelectedLengthBtn" type="button">应用</button>
+        </label>
+      </section>
+
+      <section class="group">
+        <h2 id="segmentScope">线段长度（可手动修改）</h2>
+        <div id="segmentList" class="segment-list">
+          <p class="empty">暂无线段</p>
+        </div>
+      </section>
+    </aside>
+
+    <main class="canvas-panel">
+      <button id="menuToggleBtn" class="menu-btn" type="button" aria-label="打开设置面板">☰</button>
+      <canvas id="floorCanvas" width="980" height="680"></canvas>
+      <div class="dock" role="toolbar" aria-label="绘图工具">
+        <button id="toolAddBtn" class="dock-btn active" type="button">添加点</button>
+        <button id="toolMoveBtn" class="dock-btn" type="button">移动</button>
+        <button id="toolDeleteBtn" class="dock-btn" type="button">删除线</button>
+      </div>
+      <div class="canvas-hint">
+        提示：滚轮/双指可缩放，切到“移动/删除”会自动暂存；点开放草图端点可续画。
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
